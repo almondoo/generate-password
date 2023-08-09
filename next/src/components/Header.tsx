@@ -25,7 +25,7 @@ interface Props {
   window?: () => Window;
 }
 
-const navItems = ['Home', 'About', 'Contact'];
+const navItems = ['Dummy1', 'Dummy2', 'Dummy3'];
 
 const Header: NextPage<Props> = ({ window }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -51,16 +51,19 @@ const Header: NextPage<Props> = ({ window }) => {
           >
             <MenuIcon />
           </IconButton>
+          <Typography sx={{ display: { tablet: 'none' } }}>
+            Password Generator
+          </Typography>
           <Typography
             variant="h6"
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
-            Password Generate
+            Password Generator
           </Typography>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {navItems.map((item) => (
-              <Button key={item} sx={{ color: '#fff' }}>
+              <Button key={item} sx={{ color: '#fff', textTransform: 'none' }}>
                 {item}
               </Button>
             ))}
@@ -86,7 +89,7 @@ const Header: NextPage<Props> = ({ window }) => {
         >
           <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
             <Typography variant="h6" sx={{ my: 2 }}>
-              Password Generate
+              Password Generator
             </Typography>
             <Divider />
             <List>

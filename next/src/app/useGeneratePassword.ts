@@ -41,10 +41,27 @@ export default function useGeneratePassword() {
     let passwords: string[] = [];
     for (let i = 0; i < generatedNumber; i++) {
       let password = '';
-      for (let j = 0; j < length; j++) {
-        let index = Math.floor(Math.random() * chars.length);
-        let char = chars[index];
-        password += char;
+      if (!custom.duplication) {
+        // 重複する
+        for (let j = 0; j < length; j++) {
+          let index = Math.floor(Math.random() * chars.length);
+          let char = chars[index];
+          password += char;
+        }
+      } else {
+        // 重複しない
+        let arr = chars.split('');
+        let len = arr.length;
+        const min = len - length;
+        while (len > min) {
+          const index = Math.floor(Math.random() * len);
+          password += arr[index];
+          arr.splice(index, 1);
+          len = arr.length;
+          if (len === 0) {
+            break;
+          }
+        }
       }
 
       passwords.push(password);

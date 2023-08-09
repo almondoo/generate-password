@@ -8,14 +8,17 @@ import {
   Checkbox,
   FormControlLabel,
   FormGroup,
+  FormHelperText,
   FormLabel,
   InputLabel,
   Radio,
   RadioGroup,
   Stack,
   TextField,
+  Typography,
 } from '@mui/material';
 import { NextPage } from 'next';
+import { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import styles from './page.module.scss';
@@ -46,8 +49,14 @@ const CUSTOM_NUMBER = '4';
 const symbols = '!"#$%&\'()*+,-./:;<=>?@[]^_`{|}~';
 
 const Home: NextPage = () => {
+  const [stringLength, setStringLength] = useState<number>(0);
   const { generatedPasswords, handleGenerate } = useGeneratePassword();
-  const { control, handleSubmit, watch } = useForm<Inputs>({
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>({
     defaultValues: {
       level: '1',
       custom: {
@@ -65,6 +74,7 @@ const Home: NextPage = () => {
   const watchData = watch();
 
   const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
+    setStringLength(Number(data.length));
     handleGenerate(data);
   };
 
@@ -143,10 +153,9 @@ const Home: NextPage = () => {
                               duplication: e.target.checked,
                             });
                           }}
-                          disabled={watchData.level !== CUSTOM_NUMBER}
                         />
                       }
-                      label="文字の重複を含めるか"
+                      label="文字の重複を含めない"
                     />
                     <FormControlLabel
                       control={
@@ -250,7 +259,13 @@ const Home: NextPage = () => {
             <Controller
               name="length"
               control={control}
-              render={({ field }) => (
+              rules={{
+                max: {
+                  value: 100,
+                  message: '100以下を指定してください。',
+                },
+              }}
+              render={({ field, ...props }) => (
                 <TextField
                   {...field}
                   id="lengthField"
@@ -259,6 +274,9 @@ const Home: NextPage = () => {
                 />
               )}
             />
+            {errors.length?.message && (
+              <FormHelperText error>{errors.length.message}</FormHelperText>
+            )}
           </Box>
 
           <Box>
@@ -266,6 +284,12 @@ const Home: NextPage = () => {
             <Controller
               name="generatedNumber"
               control={control}
+              rules={{
+                maxLength: {
+                  value: 100,
+                  message: '100以下を指定してください。',
+                },
+              }}
               render={({ field }) => {
                 return (
                   <TextField
@@ -277,6 +301,11 @@ const Home: NextPage = () => {
                 );
               }}
             />
+            {errors.generatedNumber?.message && (
+              <FormHelperText error>
+                {errors.generatedNumber.message}
+              </FormHelperText>
+            )}
           </Box>
 
           <Button variant="contained" type="submit">
@@ -287,7 +316,22 @@ const Home: NextPage = () => {
 
       {generatedPasswords.length ? (
         <Card className={styles.Card}>
-          <Stack direction="row" spacing={2} useFlexGap flexWrap="wrap">
+          {generatedPasswords[0].length !== stringLength && (
+            <Typography>
+              重複を含めないので
+              <Typography component="span" fontWeight="bold">
+                {generatedPasswords[0].length}文字
+              </Typography>
+              になりました
+            </Typography>
+          )}
+          <Stack
+            direction="row"
+            spacing={2}
+            useFlexGap
+            flexWrap="wrap"
+            sx={{ marginTop: 2 }}
+          >
             {generatedPasswords.map((v) => (
               <TextField
                 key={v}
