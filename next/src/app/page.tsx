@@ -260,6 +260,7 @@ const Home: NextPage = () => {
               name="length"
               control={control}
               rules={{
+                required: '数字を入力してください。',
                 min: {
                   value: 1,
                   message: '1以上を指定してください。',
@@ -269,7 +270,7 @@ const Home: NextPage = () => {
                   message: '100以下を指定してください。',
                 },
               }}
-              render={({ field, ...props }) => (
+              render={({ field }) => (
                 <TextField
                   {...field}
                   id="lengthField"
@@ -289,6 +290,7 @@ const Home: NextPage = () => {
               name="generatedNumber"
               control={control}
               rules={{
+                required: '数字を入力してください。',
                 min: {
                   value: 1,
                   message: '1以上を指定してください。',
