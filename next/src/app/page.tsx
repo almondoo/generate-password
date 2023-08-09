@@ -260,6 +260,10 @@ const Home: NextPage = () => {
               name="length"
               control={control}
               rules={{
+                min: {
+                  value: 1,
+                  message: '1以上を指定してください。',
+                },
                 max: {
                   value: 100,
                   message: '100以下を指定してください。',
@@ -285,7 +289,11 @@ const Home: NextPage = () => {
               name="generatedNumber"
               control={control}
               rules={{
-                maxLength: {
+                min: {
+                  value: 1,
+                  message: '1以上を指定してください。',
+                },
+                max: {
                   value: 100,
                   message: '100以下を指定してください。',
                 },
