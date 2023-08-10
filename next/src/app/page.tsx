@@ -356,6 +356,12 @@ const Home: NextPage = () => {
                     .then(() => toast.success('コピーしました！'))
                     .catch(() => toast.error('コピーに失敗しました！'));
                 }}
+                sx={{
+                  width: {
+                    mobile: '100%',
+                    tablet: 'auto',
+                  },
+                }}
               />
             ))}
           </Stack>

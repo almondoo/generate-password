@@ -18,7 +18,7 @@ interface Props {
 const RootLayout: FC<Props> = ({ children }) => {
   return (
     <html lang="ja">
-      <body>
+      <body className={styles.Body}>
         <ThemeRegistry>
           <Toaster />
           <Header />
