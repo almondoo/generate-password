@@ -14,6 +14,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import Link from 'next/link';
 import { useState } from 'react';
 
 interface Props {
@@ -24,7 +25,10 @@ interface Props {
   window?: () => Window;
 }
 
-const navItems = ['Dummy1', 'Dummy2', 'Dummy3'];
+const navItems = [
+  { label: 'パスワード', href: '/' },
+  { label: 'UUID', href: '/uuid' },
+];
 
 const Header = ({ window }: Props) => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -62,8 +66,13 @@ const Header = ({ window }: Props) => {
           </Typography>
           <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
             {navItems.map((item) => (
-              <Button key={item} sx={{ color: '#fff', textTransform: 'none' }}>
-                {item}
+              <Button
+                key={item.label}
+                component={Link}
+                href={item.href}
+                sx={{ color: '#fff', textTransform: 'none' }}
+              >
+                {item.label}
               </Button>
             ))}
           </Box>
@@ -93,9 +102,13 @@ const Header = ({ window }: Props) => {
             <Divider />
             <List>
               {navItems.map((item) => (
-                <ListItem key={item} disablePadding>
-                  <ListItemButton sx={{ textAlign: 'center' }}>
-                    <ListItemText primary={item} />
+                <ListItem key={item.label} disablePadding>
+                  <ListItemButton
+                    component={Link}
+                    href={item.href}
+                    sx={{ textAlign: 'center' }}
+                  >
+                    <ListItemText primary={item.label} />
                   </ListItemButton>
                 </ListItem>
               ))}
