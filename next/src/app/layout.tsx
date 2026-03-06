@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import type { Metadata } from 'next';
 import { ReactNode } from 'react';
 import { Toaster } from 'react-hot-toast';
-import styles from './layout.module.scss';
+import './globals.css';
 
 export const metadata: Metadata = {
   title: 'パスワード生成',
@@ -18,11 +18,11 @@ interface Props {
 const RootLayout = ({ children }: Props) => {
   return (
     <html lang="ja">
-      <body className={styles.Body}>
+      <body className="bg-[#eee]">
         <ThemeRegistry>
           <Toaster />
           <Header />
-          <Box component="main" className={styles.Layout}>
+          <Box component="main" className="w-full h-[calc(100vh-56px)] pt-14 sm:h-[calc(100vh-64px)] sm:pt-16 sm:px-[30px] lg:w-[1024px] lg:mx-auto">
             {children}
           </Box>
         </ThemeRegistry>

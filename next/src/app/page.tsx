@@ -21,7 +21,6 @@ import { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { PasswordInputs, SYMBOL } from './generatePassword';
-import styles from './page.module.scss';
 import useGeneratePassword from './useGeneratePassword';
 
 const levels = [
@@ -67,7 +66,7 @@ const Home = () => {
 
   return (
     <Box sx={{ padding: '40px 0' }}>
-      <Card className={styles.Card}>
+      <Card className="mx-[15px] p-5 sm:mx-0">
         <Box sx={{ textAlign: 'center' }}>
           <KeyIcon fontSize="large" />
         </Box>
@@ -308,7 +307,7 @@ const Home = () => {
       </Card>
 
       {generatedPasswords.length ? (
-        <Card className={styles.Card}>
+        <Card className="mt-[30px] mx-[15px] p-5 sm:mx-0">
           {generatedPasswords[0].length !== stringLength && (
             <Typography>
               重複を含めないので
