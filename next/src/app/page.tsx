@@ -1,25 +1,20 @@
 'use client';
 
-import KeyIcon from '@mui/icons-material/Key';
+import { Button } from '@/components/ui/button';
 import {
-  Box,
-  Button,
   Card,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-  FormHelperText,
-  FormLabel,
-  InputLabel,
-  Radio,
-  RadioGroup,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Copy, Key } from 'lucide-react';
 import { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 import { PasswordInputs, SYMBOL } from './generatePassword';
 import useGeneratePassword from './useGeneratePassword';
 
@@ -31,7 +26,6 @@ const levels = [
 ];
 
 const CUSTOM_NUMBER = '4';
-
 const symbols = SYMBOL;
 
 const Home = () => {
@@ -64,294 +58,229 @@ const Home = () => {
     handleGenerate(data);
   };
 
+  const handleCopy = (value: string) => {
+    navigator.clipboard
+      .writeText(value)
+      .then(() => toast.success('コピーしました！'))
+      .catch(() => toast.error('コピーに失敗しました！'));
+  };
+
   return (
-    <Box sx={{ padding: '40px 0' }}>
-      <Card className="mx-[15px] p-5 sm:mx-0">
-        <Box sx={{ textAlign: 'center' }}>
-          <KeyIcon fontSize="large" />
-        </Box>
-        <Stack
-          component="form"
-          onSubmit={handleSubmit(onSubmit)}
-          spacing={2}
-          sx={{ marginTop: 2 }}
-        >
-          <Box>
-            <FormLabel id="password-label-group" sx={{ fontSize: '1.5rem' }}>
-              レベル
-            </FormLabel>
-            <Controller
-              name="level"
-              control={control}
-              render={({ field }) => {
-                return (
+    <div className="space-y-6 py-6">
+      <Card>
+        <CardHeader className="text-center">
+          <Key className="mx-auto h-8 w-8 text-muted-foreground" />
+          <CardTitle className="text-xl">パスワード生成</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* レベル */}
+            <div className="space-y-2">
+              <Label className="text-base font-semibold">レベル</Label>
+              <Controller
+                name="level"
+                control={control}
+                render={({ field }) => (
                   <RadioGroup
-                    {...field}
-                    row
-                    aria-labelledby="password-label-group"
-                    name="password-label"
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    className="flex flex-wrap gap-3"
                   >
                     {levels.map((radio) => (
-                      <FormControlLabel
-                        key={radio.label}
-                        control={<Radio value={radio.value} />}
-                        label={radio.label}
-                      />
+                      <div key={radio.value} className="flex items-center gap-2">
+                        <RadioGroupItem value={radio.value} id={`level-${radio.value}`} />
+                        <Label htmlFor={`level-${radio.value}`} className="font-normal">
+                          {radio.label}
+                        </Label>
+                      </div>
                     ))}
                   </RadioGroup>
-                );
-              }}
-            />
-          </Box>
+                )}
+              />
+            </div>
 
-          <Box>
-            <FormLabel id="custom-group" sx={{ fontSize: '1.5rem' }}>
-              カスタム
-            </FormLabel>
-            <Controller
-              name="custom"
-              control={control}
-              render={({ field }) => {
-                return (
-                  <FormGroup row aria-labelledby="custom-group">
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          {...field}
-                          onChange={(e) => {
-                            field.onChange({
-                              ...field.value,
-                              number: e.target.checked,
-                            });
-                          }}
-                          disabled={watchData.level !== CUSTOM_NUMBER}
-                        />
-                      }
-                      label="数字を含めるか"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          {...field}
-                          onChange={(e) => {
-                            field.onChange({
-                              ...field.value,
-                              duplication: e.target.checked,
-                            });
-                          }}
-                        />
-                      }
-                      label="文字の重複を含めない"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          {...field}
-                          onChange={(e) => {
-                            field.onChange({
-                              ...field.value,
-                              upperCaseOnly: e.target.checked,
-                            });
-                          }}
-                          disabled={field.value.lowerCaseOnly}
-                        />
-                      }
-                      label="大文字のみ"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          {...field}
-                          onChange={(e) => {
-                            field.onChange({
-                              ...field.value,
-                              lowerCaseOnly: e.target.checked,
-                            });
-                          }}
-                          disabled={field.value.upperCaseOnly}
-                        />
-                      }
-                      label="小文字のみ"
-                    />
-                  </FormGroup>
-                );
-              }}
-            />
-          </Box>
-
-          <Box>
-            <FormLabel id="password-label" sx={{ fontSize: '1.5rem' }}>
-              記号
-            </FormLabel>
-            <Controller
-              name="symbols"
-              control={control}
-              render={({ field }) => (
-                <FormGroup row>
-                  <FormControlLabel
-                    control={
+            {/* カスタム */}
+            <div className="space-y-2">
+              <Label className="text-base font-semibold">カスタム</Label>
+              <Controller
+                name="custom"
+                control={control}
+                render={({ field }) => (
+                  <div className="flex flex-wrap gap-4">
+                    <div className="flex items-center gap-2">
                       <Checkbox
-                        {...field}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            field.onChange(symbols.split(''));
-                          } else {
-                            field.onChange([]);
-                          }
-                        }}
+                        id="custom-number"
+                        checked={field.value.number}
+                        onCheckedChange={(checked) =>
+                          field.onChange({ ...field.value, number: !!checked })
+                        }
                         disabled={watchData.level !== CUSTOM_NUMBER}
                       />
-                    }
-                    value={symbols}
-                    label="全て"
-                  />
-                  {symbols.split('').map((symbol) => (
-                    <FormControlLabel
-                      key={symbol}
-                      control={
+                      <Label htmlFor="custom-number" className="font-normal">数字を含めるか</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="custom-duplication"
+                        checked={field.value.duplication}
+                        onCheckedChange={(checked) =>
+                          field.onChange({ ...field.value, duplication: !!checked })
+                        }
+                      />
+                      <Label htmlFor="custom-duplication" className="font-normal">文字の重複を含めない</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="custom-upper"
+                        checked={field.value.upperCaseOnly}
+                        onCheckedChange={(checked) =>
+                          field.onChange({ ...field.value, upperCaseOnly: !!checked })
+                        }
+                        disabled={field.value.lowerCaseOnly}
+                      />
+                      <Label htmlFor="custom-upper" className="font-normal">大文字のみ</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="custom-lower"
+                        checked={field.value.lowerCaseOnly}
+                        onCheckedChange={(checked) =>
+                          field.onChange({ ...field.value, lowerCaseOnly: !!checked })
+                        }
+                        disabled={field.value.upperCaseOnly}
+                      />
+                      <Label htmlFor="custom-lower" className="font-normal">小文字のみ</Label>
+                    </div>
+                  </div>
+                )}
+              />
+            </div>
+
+            {/* 記号 */}
+            <div className="space-y-2">
+              <Label className="text-base font-semibold">記号</Label>
+              <Controller
+                name="symbols"
+                control={control}
+                render={({ field }) => (
+                  <div className="flex flex-wrap gap-3">
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="symbols-all"
+                        checked={field.value.length === symbols.length}
+                        onCheckedChange={(checked) =>
+                          field.onChange(checked ? symbols.split('') : [])
+                        }
+                        disabled={watchData.level !== CUSTOM_NUMBER}
+                      />
+                      <Label htmlFor="symbols-all" className="font-normal">全て</Label>
+                    </div>
+                    {symbols.split('').map((symbol, i) => (
+                      <div key={symbol} className="flex items-center gap-1">
                         <Checkbox
-                          {...field}
-                          onChange={(e) => {
-                            let values;
-                            if (e.target.checked) {
-                              values = [...field.value, symbol];
-                            } else {
-                              values = field.value.filter((v) => {
-                                return v !== symbol;
-                              });
-                            }
+                          id={`symbol-${i}`}
+                          checked={field.value.includes(symbol)}
+                          onCheckedChange={(checked) => {
+                            const values = checked
+                              ? [...field.value, symbol]
+                              : field.value.filter((v) => v !== symbol);
                             field.onChange(values);
                           }}
-                          checked={field.value.includes(symbol)}
                           disabled={watchData.level !== CUSTOM_NUMBER}
                         />
-                      }
-                      label={symbol}
-                    />
-                  ))}
-                </FormGroup>
+                        <Label htmlFor={`symbol-${i}`} className="font-normal font-mono">
+                          {symbol}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              />
+            </div>
+
+            {/* パスワードの長さ */}
+            <div className="space-y-2">
+              <Label htmlFor="lengthField" className="text-base font-semibold">
+                パスワードの長さ
+              </Label>
+              <Controller
+                name="length"
+                control={control}
+                rules={{
+                  required: '数字を入力してください。',
+                  min: { value: 1, message: '1以上を指定してください。' },
+                  max: { value: 100, message: '100以下を指定してください。' },
+                }}
+                render={({ field }) => (
+                  <Input {...field} id="lengthField" type="number" className="max-w-32" />
+                )}
+              />
+              {errors.length?.message && (
+                <p className="text-sm text-destructive">{errors.length.message}</p>
               )}
-            />
-          </Box>
+            </div>
 
-          <Box>
-            <InputLabel sx={{ fontSize: '1.5rem' }}>
-              パスワードの長さ
-            </InputLabel>
-            <Controller
-              name="length"
-              control={control}
-              rules={{
-                required: '数字を入力してください。',
-                min: {
-                  value: 1,
-                  message: '1以上を指定してください。',
-                },
-                max: {
-                  value: 100,
-                  message: '100以下を指定してください。',
-                },
-              }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  id="lengthField"
-                  size="small"
-                  type="number"
-                />
+            {/* 生成数 */}
+            <div className="space-y-2">
+              <Label htmlFor="generatedNumberField" className="text-base font-semibold">
+                生成数
+              </Label>
+              <Controller
+                name="generatedNumber"
+                control={control}
+                rules={{
+                  required: '数字を入力してください。',
+                  min: { value: 1, message: '1以上を指定してください。' },
+                  max: { value: 100, message: '100以下を指定してください。' },
+                }}
+                render={({ field }) => (
+                  <Input {...field} id="generatedNumberField" type="number" className="max-w-32" />
+                )}
+              />
+              {errors.generatedNumber?.message && (
+                <p className="text-sm text-destructive">{errors.generatedNumber.message}</p>
               )}
-            />
-            {errors.length?.message && (
-              <FormHelperText error>{errors.length.message}</FormHelperText>
-            )}
-          </Box>
+            </div>
 
-          <Box>
-            <InputLabel sx={{ fontSize: '1.5rem' }}>生成数</InputLabel>
-            <Controller
-              name="generatedNumber"
-              control={control}
-              rules={{
-                required: '数字を入力してください。',
-                min: {
-                  value: 1,
-                  message: '1以上を指定してください。',
-                },
-                max: {
-                  value: 100,
-                  message: '100以下を指定してください。',
-                },
-              }}
-              render={({ field }) => {
-                return (
-                  <TextField
-                    {...field}
-                    id="generatedNumberField"
-                    size="small"
-                    type="number"
-                  />
-                );
-              }}
-            />
-            {errors.generatedNumber?.message && (
-              <FormHelperText error>
-                {errors.generatedNumber.message}
-              </FormHelperText>
-            )}
-          </Box>
-
-          <Button variant="contained" type="submit">
-            パスワード生成
-          </Button>
-        </Stack>
+            <Button type="submit" className="w-full">
+              パスワード生成
+            </Button>
+          </form>
+        </CardContent>
       </Card>
 
-      {generatedPasswords.length ? (
-        <Card className="mt-[30px] mx-[15px] p-5 sm:mx-0">
-          {generatedPasswords[0].length !== stringLength && (
-            <Typography>
-              重複を含めないので
-              <Typography component="span" fontWeight="bold">
-                {generatedPasswords[0].length}文字
-              </Typography>
-              になりました
-            </Typography>
-          )}
-          <Stack
-            direction="row"
-            spacing={2}
-            useFlexGap
-            flexWrap="wrap"
-            sx={{ marginTop: 2 }}
-          >
-            {generatedPasswords.map((v) => (
-              <TextField
-                key={v}
-                value={v}
-                slotProps={{
-                  input: { readOnly: true },
-                }}
-                onFocus={(e) => {
-                  e.target.select();
-                  navigator.clipboard
-                    .writeText(e.target.value)
-                    .then(() => toast.success('コピーしました！'))
-                    .catch(() => toast.error('コピーに失敗しました！'));
-                }}
-                sx={{
-                  width: {
-                    mobile: '100%',
-                    tablet: 'auto',
-                  },
-                }}
-              />
-            ))}
-          </Stack>
+      {generatedPasswords.length > 0 && (
+        <Card>
+          <CardContent className="pt-6">
+            {generatedPasswords[0].length !== stringLength && (
+              <p className="mb-4 text-sm text-muted-foreground">
+                重複を含めないので
+                <span className="font-bold">{generatedPasswords[0].length}文字</span>
+                になりました
+              </p>
+            )}
+            <div className="space-y-2">
+              {generatedPasswords.map((v, i) => (
+                <div
+                  key={`${v}-${i}`}
+                  className="flex items-center gap-2 rounded-md border bg-muted/50 px-3 py-2"
+                >
+                  <code className="flex-1 truncate font-mono text-sm">{v}</code>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 shrink-0"
+                    onClick={() => handleCopy(v)}
+                  >
+                    <Copy className="h-4 w-4" />
+                    <span className="sr-only">コピー</span>
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </CardContent>
         </Card>
-      ) : (
-        ''
       )}
-    </Box>
+    </div>
   );
 };
 
