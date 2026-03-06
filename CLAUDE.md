@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## 技術スタック
 
 - Next.js 16 (App Router) / React 19 / TypeScript 5.9
-- MUI v7 (Material UI) + Emotion
+- shadcn/ui (New York) + Tailwind CSS v4
 - react-hook-form（フォーム管理）
 - pnpm（パッケージマネージャ）
 - Docker Compose（開発環境）
@@ -45,7 +45,7 @@ next/
 │   └── __tests__/                  # ユニットテスト
 ├── src/components/
 │   ├── Header.tsx                  # ヘッダー（Drawer付き）
-│   └── ThemeRegistry/              # MUI テーマ + Emotion SSR対応
+│   └── ui/                         # shadcn/ui コンポーネント
 ├── eslint.config.mjs               # ESLint flat config
 └── vitest.config.ts                # vitest設定
 ```
@@ -59,4 +59,8 @@ next/
 
 ### フォーム（`page.tsx`）
 
-react-hook-formの`Controller`でMUIコンポーネントを制御。レベル選択（英字/英数字/英数字記号/カスタム）、カスタムオプション（大文字のみ、小文字のみ、重複なし、記号選択）、パスワード長、生成数を指定可能。
+react-hook-formの`Controller`でshadcn/uiコンポーネントを制御。レベル選択（英字/英数字/英数字記号/カスタム）、カスタムオプション（大文字のみ、小文字のみ、重複なし、記号選択）、パスワード長、生成数を指定可能。
+
+## コミュニケーション
+
+- 質問がある場合は AskUserQuestion ツールを使用する

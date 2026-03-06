@@ -29,3 +29,6 @@ node:
 
 ps:
 	docker compose ps
+
+dev:
+	docker compose exec node pnpm run dev
