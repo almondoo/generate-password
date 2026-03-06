@@ -1,23 +1,19 @@
 'use client';
 
-import FingerprintIcon from '@mui/icons-material/Fingerprint';
+import { Button } from '@/components/ui/button';
 import {
-  Box,
-  Button,
   Card,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-  FormHelperText,
-  FormLabel,
-  InputLabel,
-  Radio,
-  RadioGroup,
-  Stack,
-  TextField,
-} from '@mui/material';
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Copy, Fingerprint } from 'lucide-react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 import { UuidInputs } from './generateUuid';
 import useGenerateUuid from './useGenerateUuid';
 
@@ -40,153 +36,137 @@ const Home = () => {
     handleGenerate(data);
   };
 
+  const handleCopy = (value: string) => {
+    navigator.clipboard
+      .writeText(value)
+      .then(() => toast.success('コピーしました！'))
+      .catch(() => toast.error('コピーに失敗しました！'));
+  };
+
   return (
-    <Box sx={{ padding: '40px 0' }}>
-      <Card className="mx-[15px] p-5 sm:mx-0">
-        <Box sx={{ textAlign: 'center' }}>
-          <FingerprintIcon fontSize="large" />
-        </Box>
-        <Stack
-          component="form"
-          onSubmit={handleSubmit(onSubmit)}
-          spacing={2}
-          sx={{ marginTop: 2 }}
-        >
-          <Box>
-            <FormLabel sx={{ fontSize: '1.5rem' }}>ケース</FormLabel>
-            <Controller
-              name="uppercase"
-              control={control}
-              render={({ field }) => (
-                <RadioGroup
-                  row
-                  value={field.value ? 'upper' : 'lower'}
-                  onChange={(e) => field.onChange(e.target.value === 'upper')}
-                >
-                  <FormControlLabel
-                    control={<Radio value="lower" />}
-                    label="小文字"
-                  />
-                  <FormControlLabel
-                    control={<Radio value="upper" />}
-                    label="大文字"
-                  />
-                </RadioGroup>
-              )}
-            />
-          </Box>
-
-          <Box>
-            <FormLabel sx={{ fontSize: '1.5rem' }}>オプション</FormLabel>
-            <FormGroup row>
+    <div className="space-y-6 py-6">
+      <Card>
+        <CardHeader className="text-center">
+          <Fingerprint className="mx-auto h-8 w-8 text-muted-foreground" />
+          <CardTitle className="text-xl">UUID v4 生成</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* ケース */}
+            <div className="space-y-2">
+              <Label className="text-base font-semibold">ケース</Label>
               <Controller
-                name="hyphen"
+                name="uppercase"
                 control={control}
                 render={({ field }) => (
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={field.value}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                      />
-                    }
-                    label="ハイフンを含める"
-                  />
+                  <RadioGroup
+                    value={field.value ? 'upper' : 'lower'}
+                    onValueChange={(v) => field.onChange(v === 'upper')}
+                    className="flex gap-3"
+                  >
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem value="lower" id="case-lower" />
+                      <Label htmlFor="case-lower" className="font-normal">小文字</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <RadioGroupItem value="upper" id="case-upper" />
+                      <Label htmlFor="case-upper" className="font-normal">大文字</Label>
+                    </div>
+                  </RadioGroup>
                 )}
               />
-              <Controller
-                name="braces"
-                control={control}
-                render={({ field }) => (
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={field.value}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                      />
-                    }
-                    label="括弧で囲む {...}"
-                  />
-                )}
-              />
-            </FormGroup>
-          </Box>
+            </div>
 
-          <Box>
-            <InputLabel sx={{ fontSize: '1.5rem' }}>生成数</InputLabel>
-            <Controller
-              name="generatedNumber"
-              control={control}
-              rules={{
-                required: '数字を入力してください。',
-                min: {
-                  value: 1,
-                  message: '1以上を指定してください。',
-                },
-                max: {
-                  value: 100,
-                  message: '100以下を指定してください。',
-                },
-              }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  id="generatedNumberField"
-                  size="small"
-                  type="number"
+            {/* オプション */}
+            <div className="space-y-2">
+              <Label className="text-base font-semibold">オプション</Label>
+              <div className="flex flex-wrap gap-4">
+                <Controller
+                  name="hyphen"
+                  control={control}
+                  render={({ field }) => (
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="opt-hyphen"
+                        checked={field.value}
+                        onCheckedChange={(checked) => field.onChange(!!checked)}
+                      />
+                      <Label htmlFor="opt-hyphen" className="font-normal">ハイフンを含める</Label>
+                    </div>
+                  )}
                 />
-              )}
-            />
-            {errors.generatedNumber?.message && (
-              <FormHelperText error>
-                {errors.generatedNumber.message}
-              </FormHelperText>
-            )}
-          </Box>
+                <Controller
+                  name="braces"
+                  control={control}
+                  render={({ field }) => (
+                    <div className="flex items-center gap-2">
+                      <Checkbox
+                        id="opt-braces"
+                        checked={field.value}
+                        onCheckedChange={(checked) => field.onChange(!!checked)}
+                      />
+                      <Label htmlFor="opt-braces" className="font-normal">{'括弧で囲む {...}'}</Label>
+                    </div>
+                  )}
+                />
+              </div>
+            </div>
 
-          <Button variant="contained" type="submit">
-            UUID生成
-          </Button>
-        </Stack>
+            {/* 生成数 */}
+            <div className="space-y-2">
+              <Label htmlFor="generatedNumberField" className="text-base font-semibold">
+                生成数
+              </Label>
+              <Controller
+                name="generatedNumber"
+                control={control}
+                rules={{
+                  required: '数字を入力してください。',
+                  min: { value: 1, message: '1以上を指定してください。' },
+                  max: { value: 100, message: '100以下を指定してください。' },
+                }}
+                render={({ field }) => (
+                  <Input {...field} id="generatedNumberField" type="number" className="max-w-32" />
+                )}
+              />
+              {errors.generatedNumber?.message && (
+                <p className="text-sm text-destructive">{errors.generatedNumber.message}</p>
+              )}
+            </div>
+
+            <Button type="submit" className="w-full">
+              UUID生成
+            </Button>
+          </form>
+        </CardContent>
       </Card>
 
-      {generatedUuids.length ? (
-        <Card className="mt-[30px] mx-[15px] p-5 sm:mx-0">
-          <Stack
-            direction="row"
-            spacing={2}
-            useFlexGap
-            flexWrap="wrap"
-            sx={{ marginTop: 2 }}
-          >
-            {generatedUuids.map((v, i) => (
-              <TextField
-                key={`${v}-${i}`}
-                value={v}
-                slotProps={{
-                  input: { readOnly: true },
-                }}
-                onFocus={(e) => {
-                  e.target.select();
-                  navigator.clipboard
-                    .writeText(e.target.value)
-                    .then(() => toast.success('コピーしました！'))
-                    .catch(() => toast.error('コピーに失敗しました！'));
-                }}
-                sx={{
-                  width: {
-                    mobile: '100%',
-                    tablet: 'auto',
-                  },
-                }}
-              />
-            ))}
-          </Stack>
+      {generatedUuids.length > 0 && (
+        <Card>
+          <CardContent className="pt-6">
+            <div className="space-y-2">
+              {generatedUuids.map((v, i) => (
+                <div
+                  key={`${v}-${i}`}
+                  className="flex items-center gap-2 rounded-md border bg-muted/50 px-3 py-2"
+                >
+                  <code className="flex-1 truncate font-mono text-sm">{v}</code>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 shrink-0"
+                    onClick={() => handleCopy(v)}
+                  >
+                    <Copy className="h-4 w-4" />
+                    <span className="sr-only">コピー</span>
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </CardContent>
         </Card>
-      ) : (
-        ''
       )}
-    </Box>
+    </div>
   );
 };
 
