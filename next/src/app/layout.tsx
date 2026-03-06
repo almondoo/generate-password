@@ -2,7 +2,7 @@ import Header from '@/components/Header';
 import ThemeRegistry from '@/components/ThemeRegistry/ThemeRegistry';
 import { Box } from '@mui/material';
 import type { Metadata } from 'next';
-import { FC, ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { Toaster } from 'react-hot-toast';
 import styles from './layout.module.scss';
 
@@ -15,7 +15,7 @@ interface Props {
   children: ReactNode;
 }
 
-const RootLayout: FC<Props> = ({ children }) => {
+const RootLayout = ({ children }: Props) => {
   return (
     <html lang="ja">
       <body className={styles.Body}>

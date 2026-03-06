@@ -14,7 +14,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { NextPage } from 'next';
 import { useState } from 'react';
 
 interface Props {
@@ -27,7 +26,7 @@ interface Props {
 
 const navItems = ['Dummy1', 'Dummy2', 'Dummy3'];
 
-const Header: NextPage<Props> = ({ window }) => {
+const Header = ({ window }: Props) => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {

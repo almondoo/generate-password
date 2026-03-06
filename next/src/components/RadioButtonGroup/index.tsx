@@ -3,7 +3,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
-import { FC, ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
@@ -13,7 +13,7 @@ interface Props {
   }[];
 }
 
-const RadioButtonGroup: FC<Props> = ({ children, radios }) => {
+const RadioButtonGroup = ({ children, radios }: Props) => {
   return (
     <FormControl>
       <FormLabel id="demo-row-radio-buttons-group-label">{children}</FormLabel>

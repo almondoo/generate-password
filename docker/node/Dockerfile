@@ -1,5 +1,5 @@
-FROM node:20-alpine
+FROM node:24-slim
+
+RUN npm install -g pnpm
 
 WORKDIR /var/www/src
-
-RUN npm install -g npm@latest

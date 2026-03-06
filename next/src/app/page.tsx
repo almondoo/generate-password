@@ -17,25 +17,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { NextPage } from 'next';
 import { useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
+import { PasswordInputs, SYMBOL } from './generatePassword';
 import styles from './page.module.scss';
 import useGeneratePassword from './useGeneratePassword';
-
-export interface Inputs {
-  level: string;
-  custom: {
-    number: boolean;
-    duplication: boolean;
-    upperCaseOnly: boolean;
-    lowerCaseOnly: boolean;
-  };
-  symbols: string[];
-  length: number;
-  generatedNumber: number;
-}
 
 const levels = [
   { label: '英字', value: '1' },
@@ -46,9 +33,9 @@ const levels = [
 
 const CUSTOM_NUMBER = '4';
 
-const symbols = '!"#$%&\'()*+,-./:;<=>?@[]^_`{|}~';
+const symbols = SYMBOL;
 
-const Home: NextPage = () => {
+const Home = () => {
   const [stringLength, setStringLength] = useState<number>(0);
   const { generatedPasswords, handleGenerate } = useGeneratePassword();
   const {
@@ -56,7 +43,7 @@ const Home: NextPage = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<Inputs>({
+  } = useForm<PasswordInputs>({
     defaultValues: {
       level: '1',
       custom: {
@@ -73,7 +60,7 @@ const Home: NextPage = () => {
 
   const watchData = watch();
 
-  const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
+  const onSubmit: SubmitHandler<PasswordInputs> = (data: PasswordInputs) => {
     setStringLength(Number(data.length));
     handleGenerate(data);
   };
@@ -236,11 +223,7 @@ const Home: NextPage = () => {
                             }
                             field.onChange(values);
                           }}
-                          checked={
-                            field.value.find((v) => v === symbol) === undefined
-                              ? false
-                              : true
-                          }
+                          checked={field.value.includes(symbol)}
                           disabled={watchData.level !== CUSTOM_NUMBER}
                         />
                       }
@@ -346,8 +329,8 @@ const Home: NextPage = () => {
               <TextField
                 key={v}
                 value={v}
-                InputProps={{
-                  readOnly: true,
+                slotProps={{
+                  input: { readOnly: true },
                 }}
                 onFocus={(e) => {
                   e.target.select();

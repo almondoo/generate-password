@@ -25,7 +25,7 @@ reset:
 	@make up
 
 node:
-	docker compose exec node ash
+	docker compose exec node bash
 
 ps:
 	docker compose ps
