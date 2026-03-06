@@ -19,7 +19,6 @@ import {
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { UuidInputs } from './generateUuid';
-import styles from './page.module.scss';
 import useGenerateUuid from './useGenerateUuid';
 
 const Home = () => {
@@ -43,7 +42,7 @@ const Home = () => {
 
   return (
     <Box sx={{ padding: '40px 0' }}>
-      <Card className={styles.Card}>
+      <Card className="mx-[15px] p-5 sm:mx-0">
         <Box sx={{ textAlign: 'center' }}>
           <FingerprintIcon fontSize="large" />
         </Box>
@@ -152,7 +151,7 @@ const Home = () => {
       </Card>
 
       {generatedUuids.length ? (
-        <Card className={styles.Card}>
+        <Card className="mt-[30px] mx-[15px] p-5 sm:mx-0">
           <Stack
             direction="row"
             spacing={2}
