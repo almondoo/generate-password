@@ -28,6 +28,17 @@ describe('generateToken', () => {
       expect(token).toMatch(/^[A-Za-z0-9_-]+$/);
     }
   });
+  it('1バイトのトークンを生成できる', () => {
+    const hex = generateToken('hex', 1);
+    expect(hex).toHaveLength(2);
+    expect(hex).toMatch(/^[0-9a-f]{2}$/);
+
+    const b64 = generateToken('base64', 1);
+    expect(b64).toMatch(/^[A-Za-z0-9+/]+=*$/);
+
+    const urlSafe = generateToken('url-safe', 1);
+    expect(urlSafe).toMatch(/^[A-Za-z0-9_-]+$/);
+  });
 });
 
 describe('generateTokens', () => {

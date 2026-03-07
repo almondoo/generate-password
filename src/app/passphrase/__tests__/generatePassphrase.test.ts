@@ -37,6 +37,12 @@ describe('generatePassphrase', () => {
     });
   });
 
+  it('1単語のパスフレーズを生成できる', () => {
+    const passphrase = generatePassphrase(makeInputs({ wordCount: 1 }));
+    expect(passphrase).not.toContain('-');
+    expect(passphrase.length).toBeGreaterThan(0);
+  });
+
   it('単語数を変更できる', () => {
     const passphrase = generatePassphrase(makeInputs({ wordCount: 7 }));
     const words = passphrase.split('-');
