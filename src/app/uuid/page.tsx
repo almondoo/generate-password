@@ -13,11 +13,10 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Check, Copy, Fingerprint } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
-import { useCallback, useRef, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { toast } from 'sonner';
 import { UuidInputs } from './generateUuid';
 import useGenerateUuid from './useGenerateUuid';
+import useResultList from '../useResultList';
 
 const Home = () => {
   const { generatedUuids, handleGenerate } = useGenerateUuid();
@@ -38,20 +37,7 @@ const Home = () => {
     handleGenerate(data);
   };
 
-  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
-  const copiedTimer = useRef<ReturnType<typeof setTimeout>>(null);
-
-  const handleCopy = useCallback((value: string, index: number) => {
-    navigator.clipboard
-      .writeText(value)
-      .then(() => {
-        toast.success('コピーしました！');
-        setCopiedIndex(index);
-        if (copiedTimer.current) clearTimeout(copiedTimer.current);
-        copiedTimer.current = setTimeout(() => setCopiedIndex(null), 2000);
-      })
-      .catch(() => toast.error('コピーに失敗しました！'));
-  }, []);
+  const { resultRef, copiedIndex, handleCopy } = useResultList(generatedUuids);
 
   return (
     <div className="space-y-6 py-6">
@@ -156,6 +142,7 @@ const Home = () => {
       <AnimatePresence>
         {generatedUuids.length > 0 && (
           <motion.div
+            ref={resultRef}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
