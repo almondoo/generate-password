@@ -26,7 +26,7 @@ const levels = [
 ];
 
 const CUSTOM_NUMBER = '4';
-const symbols = SYMBOL;
+const symbolChars = SYMBOL.split('');
 
 const Home = () => {
   const [stringLength, setStringLength] = useState<number>(0);
@@ -51,7 +51,7 @@ const Home = () => {
     },
   });
 
-  const watchData = watch();
+  const watchLevel = watch('level');
 
   const onSubmit: SubmitHandler<PasswordInputs> = (data: PasswordInputs) => {
     setStringLength(Number(data.length));
@@ -114,7 +114,7 @@ const Home = () => {
                         onCheckedChange={(checked) =>
                           field.onChange({ ...field.value, number: !!checked })
                         }
-                        disabled={watchData.level !== CUSTOM_NUMBER}
+                        disabled={watchLevel !== CUSTOM_NUMBER}
                       />
                       <Label htmlFor="custom-number" className="font-normal">数字を含めるか</Label>
                     </div>
@@ -166,15 +166,15 @@ const Home = () => {
                     <div className="flex items-center gap-2">
                       <Checkbox
                         id="symbols-all"
-                        checked={field.value.length === symbols.length}
+                        checked={field.value.length === symbolChars.length}
                         onCheckedChange={(checked) =>
-                          field.onChange(checked ? symbols.split('') : [])
+                          field.onChange(checked ? [...symbolChars] : [])
                         }
-                        disabled={watchData.level !== CUSTOM_NUMBER}
+                        disabled={watchLevel !== CUSTOM_NUMBER}
                       />
                       <Label htmlFor="symbols-all" className="font-normal">全て</Label>
                     </div>
-                    {symbols.split('').map((symbol, i) => (
+                    {symbolChars.map((symbol, i) => (
                       <div key={symbol} className="flex items-center gap-1">
                         <Checkbox
                           id={`symbol-${i}`}
@@ -185,7 +185,7 @@ const Home = () => {
                               : field.value.filter((v) => v !== symbol);
                             field.onChange(values);
                           }}
-                          disabled={watchData.level !== CUSTOM_NUMBER}
+                          disabled={watchLevel !== CUSTOM_NUMBER}
                         />
                         <Label htmlFor={`symbol-${i}`} className="font-normal font-mono">
                           {symbol}
