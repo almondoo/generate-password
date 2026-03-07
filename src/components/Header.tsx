@@ -34,19 +34,9 @@ const Header = () => {
           Generator Tools
         </Link>
 
-        {/* Desktop nav */}
-        <nav className="hidden gap-1 sm:flex">
-          {navItems.map((item) => (
-            <Button key={item.label} variant="ghost" size="sm" asChild>
-              <Link href={item.href}>{item.label}</Link>
-            </Button>
-          ))}
-        </nav>
-
-        {/* Mobile nav */}
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="sm:hidden">
+            <Button variant="ghost" size="icon">
               <Menu className="h-5 w-5" />
               <span className="sr-only">メニューを開く</span>
             </Button>
