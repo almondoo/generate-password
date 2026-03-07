@@ -17,8 +17,8 @@ const RootLayout = ({ children }: Props) => {
   return (
     <html lang="ja">
       <body className="min-h-screen bg-background text-foreground antialiased">
-        <Header />
-        <main className="mx-auto w-full max-w-2xl px-4 pt-20 pb-10">
+        <main className="mx-auto w-full max-w-2xl px-4 py-10">
+          <Header />
           {children}
         </main>
         <Toaster richColors position="top-right" />
