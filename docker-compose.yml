@@ -4,6 +4,6 @@ services:
       context: ./docker/node
     tty: true
     volumes:
-      - ./next:/var/www/src
+      - .:/var/www/src
     ports:
       - "3000:3000"

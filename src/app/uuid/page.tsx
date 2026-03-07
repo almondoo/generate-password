@@ -74,14 +74,14 @@ const Home = () => {
                     onValueChange={(v) => field.onChange(v === 'upper')}
                     className="flex gap-3"
                   >
-                    <div className="flex items-center gap-2">
+                    <Label htmlFor="case-lower" className="flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 font-normal transition-colors hover:bg-accent has-[:checked]:border-primary has-[:checked]:bg-primary/5">
                       <RadioGroupItem value="lower" id="case-lower" />
-                      <Label htmlFor="case-lower" className="font-normal">小文字</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
+                      小文字
+                    </Label>
+                    <Label htmlFor="case-upper" className="flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 font-normal transition-colors hover:bg-accent has-[:checked]:border-primary has-[:checked]:bg-primary/5">
                       <RadioGroupItem value="upper" id="case-upper" />
-                      <Label htmlFor="case-upper" className="font-normal">大文字</Label>
-                    </div>
+                      大文字
+                    </Label>
                   </RadioGroup>
                 )}
               />
@@ -95,28 +95,28 @@ const Home = () => {
                   name="hyphen"
                   control={control}
                   render={({ field }) => (
-                    <div className="flex items-center gap-2">
+                    <Label htmlFor="opt-hyphen" className="flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 font-normal transition-colors hover:bg-accent has-[:checked]:border-primary has-[:checked]:bg-primary/5">
                       <Checkbox
                         id="opt-hyphen"
                         checked={field.value}
                         onCheckedChange={(checked) => field.onChange(!!checked)}
                       />
-                      <Label htmlFor="opt-hyphen" className="font-normal">ハイフンを含める</Label>
-                    </div>
+                      ハイフンを含める
+                    </Label>
                   )}
                 />
                 <Controller
                   name="braces"
                   control={control}
                   render={({ field }) => (
-                    <div className="flex items-center gap-2">
+                    <Label htmlFor="opt-braces" className="flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 font-normal transition-colors hover:bg-accent has-[:checked]:border-primary has-[:checked]:bg-primary/5">
                       <Checkbox
                         id="opt-braces"
                         checked={field.value}
                         onCheckedChange={(checked) => field.onChange(!!checked)}
                       />
-                      <Label htmlFor="opt-braces" className="font-normal">{'括弧で囲む {...}'}</Label>
-                    </div>
+                      {'括弧で囲む {...}'}
+                    </Label>
                   )}
                 />
               </div>
@@ -172,11 +172,12 @@ const Home = () => {
                   {generatedUuids.map((v, i) => (
                     <motion.div
                       key={`${v}-${i}`}
-                      className="flex items-center gap-2 rounded-md border bg-muted/50 px-3 py-2"
+                      className="flex cursor-pointer items-center gap-2 rounded-md border bg-muted/50 px-3 py-2 transition-colors hover:bg-muted"
                       variants={{
                         hidden: { opacity: 0, y: 8 },
                         visible: { opacity: 1, y: 0 },
                       }}
+                      onClick={() => handleCopy(v, i)}
                     >
                       <code className="flex-1 truncate font-mono text-sm">{v}</code>
                       <Button

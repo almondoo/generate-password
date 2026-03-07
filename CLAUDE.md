@@ -37,17 +37,17 @@ pnpm test:coverage     # カバレッジ付きテスト
 ## アーキテクチャ
 
 ```
-next/
-├── src/app/
-│   ├── page.tsx                    # メインページ（フォームUI + パスワード表示）
-│   ├── generatePassword.ts         # パスワード生成ロジック（純粋関数）
-│   ├── useGeneratePassword.ts      # React Hook（generatePasswordsのラッパー）
-│   └── __tests__/                  # ユニットテスト
-├── src/components/
-│   ├── Header.tsx                  # ヘッダー（Drawer付き）
-│   └── ui/                         # shadcn/ui コンポーネント
-├── eslint.config.mjs               # ESLint flat config
-└── vitest.config.ts                # vitest設定
+src/app/
+├── page.tsx                        # メインページ（フォームUI + パスワード表示）
+├── generatePassword.ts             # パスワード生成ロジック（純粋関数）
+├── useGeneratePassword.ts          # React Hook（generatePasswordsのラッパー）
+├── uuid/                           # UUID生成ページ
+└── __tests__/                      # ユニットテスト
+src/components/
+├── Header.tsx                      # ヘッダー（Drawer付き）
+└── ui/                             # shadcn/ui コンポーネント
+eslint.config.mjs                   # ESLint flat config
+vitest.config.ts                    # vitest設定
 ```
 
 ### パスワード生成ロジック（`generatePassword.ts`）

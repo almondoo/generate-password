@@ -96,12 +96,14 @@ const Home = () => {
                     className="flex flex-wrap gap-3"
                   >
                     {levels.map((radio) => (
-                      <div key={radio.value} className="flex items-center gap-2">
+                      <Label
+                        key={radio.value}
+                        htmlFor={`level-${radio.value}`}
+                        className="flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 font-normal transition-colors hover:bg-accent has-[:checked]:border-primary has-[:checked]:bg-primary/5"
+                      >
                         <RadioGroupItem value={radio.value} id={`level-${radio.value}`} />
-                        <Label htmlFor={`level-${radio.value}`} className="font-normal">
-                          {radio.label}
-                        </Label>
-                      </div>
+                        {radio.label}
+                      </Label>
                     ))}
                   </RadioGroup>
                 )}
@@ -115,8 +117,8 @@ const Home = () => {
                 name="custom"
                 control={control}
                 render={({ field }) => (
-                  <div className="flex flex-wrap gap-4">
-                    <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap gap-3">
+                    <Label htmlFor="custom-number" className="flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 font-normal transition-colors hover:bg-accent has-[:checked]:border-primary has-[:checked]:bg-primary/5 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
                       <Checkbox
                         id="custom-number"
                         checked={field.value.number}
@@ -125,9 +127,9 @@ const Home = () => {
                         }
                         disabled={watchLevel !== CUSTOM_NUMBER}
                       />
-                      <Label htmlFor="custom-number" className="font-normal">数字を含めるか</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
+                      数字を含めるか
+                    </Label>
+                    <Label htmlFor="custom-duplication" className="flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 font-normal transition-colors hover:bg-accent has-[:checked]:border-primary has-[:checked]:bg-primary/5">
                       <Checkbox
                         id="custom-duplication"
                         checked={field.value.duplication}
@@ -135,9 +137,9 @@ const Home = () => {
                           field.onChange({ ...field.value, duplication: !!checked })
                         }
                       />
-                      <Label htmlFor="custom-duplication" className="font-normal">文字の重複を含めない</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
+                      文字の重複を含めない
+                    </Label>
+                    <Label htmlFor="custom-upper" className="flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 font-normal transition-colors hover:bg-accent has-[:checked]:border-primary has-[:checked]:bg-primary/5 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
                       <Checkbox
                         id="custom-upper"
                         checked={field.value.upperCaseOnly}
@@ -146,9 +148,9 @@ const Home = () => {
                         }
                         disabled={field.value.lowerCaseOnly}
                       />
-                      <Label htmlFor="custom-upper" className="font-normal">大文字のみ</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
+                      大文字のみ
+                    </Label>
+                    <Label htmlFor="custom-lower" className="flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 font-normal transition-colors hover:bg-accent has-[:checked]:border-primary has-[:checked]:bg-primary/5 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
                       <Checkbox
                         id="custom-lower"
                         checked={field.value.lowerCaseOnly}
@@ -157,8 +159,8 @@ const Home = () => {
                         }
                         disabled={field.value.upperCaseOnly}
                       />
-                      <Label htmlFor="custom-lower" className="font-normal">小文字のみ</Label>
-                    </div>
+                      小文字のみ
+                    </Label>
                   </div>
                 )}
               />
@@ -171,8 +173,8 @@ const Home = () => {
                 name="symbols"
                 control={control}
                 render={({ field }) => (
-                  <div className="flex flex-wrap gap-3">
-                    <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap gap-2">
+                    <Label htmlFor="symbols-all" className="flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 font-normal transition-colors hover:bg-accent has-[:checked]:border-primary has-[:checked]:bg-primary/5 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
                       <Checkbox
                         id="symbols-all"
                         checked={field.value.length === symbolChars.length}
@@ -181,10 +183,10 @@ const Home = () => {
                         }
                         disabled={watchLevel !== CUSTOM_NUMBER}
                       />
-                      <Label htmlFor="symbols-all" className="font-normal">全て</Label>
-                    </div>
+                      全て
+                    </Label>
                     {symbolChars.map((symbol, i) => (
-                      <div key={symbol} className="flex items-center gap-1">
+                      <Label key={symbol} htmlFor={`symbol-${i}`} className="flex cursor-pointer items-center gap-1.5 rounded-md border px-2.5 py-2 font-normal font-mono transition-colors hover:bg-accent has-[:checked]:border-primary has-[:checked]:bg-primary/5 has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-50">
                         <Checkbox
                           id={`symbol-${i}`}
                           checked={field.value.includes(symbol)}
@@ -196,10 +198,8 @@ const Home = () => {
                           }}
                           disabled={watchLevel !== CUSTOM_NUMBER}
                         />
-                        <Label htmlFor={`symbol-${i}`} className="font-normal font-mono">
-                          {symbol}
-                        </Label>
-                      </div>
+                        {symbol}
+                      </Label>
                     ))}
                   </div>
                 )}
@@ -285,11 +285,12 @@ const Home = () => {
                   {generatedPasswords.map((v, i) => (
                     <motion.div
                       key={`${v}-${i}`}
-                      className="flex items-center gap-2 rounded-md border bg-muted/50 px-3 py-2"
+                      className="flex cursor-pointer items-center gap-2 rounded-md border bg-muted/50 px-3 py-2 transition-colors hover:bg-muted"
                       variants={{
                         hidden: { opacity: 0, y: 8 },
                         visible: { opacity: 1, y: 0 },
                       }}
+                      onClick={() => handleCopy(v, i)}
                     >
                       <code className="flex-1 truncate font-mono text-sm">{v}</code>
                       <Button
