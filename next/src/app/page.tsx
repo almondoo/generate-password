@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Check, Copy, Key } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
 import { useCallback, useRef, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -108,7 +109,7 @@ const Home = () => {
             </div>
 
             {/* カスタム */}
-            <div className="space-y-2">
+            <motion.div className="space-y-2" animate={{ opacity: watchLevel === CUSTOM_NUMBER ? 1 : 0.5 }} transition={{ duration: 0.2 }}>
               <Label className="text-base font-semibold">カスタム</Label>
               <Controller
                 name="custom"
@@ -161,10 +162,10 @@ const Home = () => {
                   </div>
                 )}
               />
-            </div>
+            </motion.div>
 
             {/* 記号 */}
-            <div className="space-y-2">
+            <motion.div className="space-y-2" animate={{ opacity: watchLevel === CUSTOM_NUMBER ? 1 : 0.5 }} transition={{ duration: 0.2 }}>
               <Label className="text-base font-semibold">記号</Label>
               <Controller
                 name="symbols"
@@ -203,7 +204,7 @@ const Home = () => {
                   </div>
                 )}
               />
-            </div>
+            </motion.div>
 
             {/* パスワードの長さ */}
             <div className="space-y-2">
@@ -249,49 +250,87 @@ const Home = () => {
               )}
             </div>
 
-            <Button type="submit" className="w-full">
-              パスワード生成
-            </Button>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button type="submit" className="w-full">
+                パスワード生成
+              </Button>
+            </motion.div>
           </form>
         </CardContent>
       </Card>
 
-      {generatedPasswords.length > 0 && (
-        <Card>
-          <CardContent className="pt-6">
-            {generatedPasswords[0].length !== stringLength && (
-              <p className="mb-4 text-sm text-muted-foreground">
-                重複を含めないので
-                <span className="font-bold">{generatedPasswords[0].length}文字</span>
-                になりました
-              </p>
-            )}
-            <div className="space-y-2">
-              {generatedPasswords.map((v, i) => (
-                <div
-                  key={`${v}-${i}`}
-                  className="flex items-center gap-2 rounded-md border bg-muted/50 px-3 py-2"
+      <AnimatePresence>
+        {generatedPasswords.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.3 }}
+          >
+            <Card>
+              <CardContent className="pt-6">
+                {generatedPasswords[0].length !== stringLength && (
+                  <p className="mb-4 text-sm text-muted-foreground">
+                    重複を含めないので
+                    <span className="font-bold">{generatedPasswords[0].length}文字</span>
+                    になりました
+                  </p>
+                )}
+                <motion.div
+                  className="space-y-2"
+                  initial="hidden"
+                  animate="visible"
+                  variants={{ visible: { transition: { staggerChildren: 0.03 } } }}
                 >
-                  <code className="flex-1 truncate font-mono text-sm">{v}</code>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-8 w-8 shrink-0"
-                    onClick={() => handleCopy(v, i)}
-                    aria-label={copiedIndex === i ? 'コピー済み' : 'コピー'}
-                  >
-                    {copiedIndex === i ? (
-                      <Check className="h-4 w-4 text-green-500" />
-                    ) : (
-                      <Copy className="h-4 w-4" />
-                    )}
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+                  {generatedPasswords.map((v, i) => (
+                    <motion.div
+                      key={`${v}-${i}`}
+                      className="flex items-center gap-2 rounded-md border bg-muted/50 px-3 py-2"
+                      variants={{
+                        hidden: { opacity: 0, y: 8 },
+                        visible: { opacity: 1, y: 0 },
+                      }}
+                    >
+                      <code className="flex-1 truncate font-mono text-sm">{v}</code>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 shrink-0"
+                        onClick={() => handleCopy(v, i)}
+                        aria-label={copiedIndex === i ? 'コピー済み' : 'コピー'}
+                      >
+                        <AnimatePresence mode="wait" initial={false}>
+                          {copiedIndex === i ? (
+                            <motion.span
+                              key="check"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              exit={{ scale: 0 }}
+                              transition={{ duration: 0.15 }}
+                            >
+                              <Check className="h-4 w-4 text-green-500" />
+                            </motion.span>
+                          ) : (
+                            <motion.span
+                              key="copy"
+                              initial={{ scale: 0 }}
+                              animate={{ scale: 1 }}
+                              exit={{ scale: 0 }}
+                              transition={{ duration: 0.15 }}
+                            >
+                              <Copy className="h-4 w-4" />
+                            </motion.span>
+                          )}
+                        </AnimatePresence>
+                      </Button>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
