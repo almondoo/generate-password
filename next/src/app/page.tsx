@@ -11,8 +11,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Copy, Key } from 'lucide-react';
-import { useState } from 'react';
+import { Check, Copy, Key } from 'lucide-react';
+import { useCallback, useRef, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { PasswordInputs, SYMBOL } from './generatePassword';
@@ -58,12 +58,20 @@ const Home = () => {
     handleGenerate(data);
   };
 
-  const handleCopy = (value: string) => {
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const copiedTimer = useRef<ReturnType<typeof setTimeout>>(null);
+
+  const handleCopy = useCallback((value: string, index: number) => {
     navigator.clipboard
       .writeText(value)
-      .then(() => toast.success('コピーしました！'))
+      .then(() => {
+        toast.success('コピーしました！');
+        setCopiedIndex(index);
+        if (copiedTimer.current) clearTimeout(copiedTimer.current);
+        copiedTimer.current = setTimeout(() => setCopiedIndex(null), 2000);
+      })
       .catch(() => toast.error('コピーに失敗しました！'));
-  };
+  }, []);
 
   return (
     <div className="space-y-6 py-6">
@@ -269,10 +277,14 @@ const Home = () => {
                     variant="ghost"
                     size="icon"
                     className="h-8 w-8 shrink-0"
-                    onClick={() => handleCopy(v)}
+                    onClick={() => handleCopy(v, i)}
+                    aria-label={copiedIndex === i ? 'コピー済み' : 'コピー'}
                   >
-                    <Copy className="h-4 w-4" />
-                    <span className="sr-only">コピー</span>
+                    {copiedIndex === i ? (
+                      <Check className="h-4 w-4 text-green-500" />
+                    ) : (
+                      <Copy className="h-4 w-4" />
+                    )}
                   </Button>
                 </div>
               ))}
