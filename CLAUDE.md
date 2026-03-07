@@ -14,14 +14,14 @@
 
 ## コマンド
 
-すべてのコマンドはDockerコンテナ内で実行する。利用可能なコマンドは `package.json` の `scripts` と `Makefile` を参照すること。
+すべてのコマンドはDockerコンテナ内で実行する。`docker compose exec node` を経由すること。利用可能なコマンドは `package.json` の `scripts` と `Makefile` を参照すること。
 
 ## 実装後の確認
 
 実装後は必ず以下を順番に実行し、すべてパスすることを確認する。
 
 ```bash
-pnpm run lint
-pnpm run test
-pnpm run build
+docker compose exec node pnpm run lint
+docker compose exec node pnpm run test
+docker compose exec node pnpm run build
 ```
