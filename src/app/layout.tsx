@@ -6,7 +6,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Generator Tools',
-  description: 'パスワード・UUIDを生成する',
+  description: 'パスワード・UUID・トークン・ハッシュなどを生成する',
 };
 
 interface Props {

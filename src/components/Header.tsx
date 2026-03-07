@@ -15,6 +15,13 @@ import { useState } from 'react';
 const navItems = [
   { label: 'パスワード', href: '/' },
   { label: 'UUID', href: '/uuid' },
+  { label: 'PIN', href: '/pin' },
+  { label: 'トークン', href: '/token' },
+  { label: 'ハッシュ', href: '/hash' },
+  { label: 'Base64', href: '/base64' },
+  { label: 'ULID', href: '/ulid' },
+  { label: 'パスフレーズ', href: '/passphrase' },
+  { label: 'QRコード', href: '/qrcode' },
 ];
 
 const Header = () => {
