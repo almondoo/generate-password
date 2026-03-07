@@ -2,12 +2,7 @@
 
 import { CopyButton } from '@/components/CopyButton';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import ToolPageLayout from '@/components/ToolPageLayout';
 import { Input } from '@/components/ui/input';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { ArrowLeftRight, Clock } from 'lucide-react';
@@ -89,161 +84,153 @@ const CronPage = () => {
   };
 
   return (
-    <div className="space-y-6 py-6">
-      <Card>
-        <CardHeader className="text-center">
-          <Clock className="mx-auto h-8 w-8 text-muted-foreground" />
-          <CardTitle className="text-xl">Cron式 {mode === 'parse' ? '解説' : 'ビルダー'}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Button
-              variant={mode === 'parse' ? 'default' : 'outline'}
-              onClick={() => { setMode('parse'); setError(''); }}
-            >
-              解説
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleMode}
-              aria-label="モード切替"
-            >
-              <ArrowLeftRight className="h-4 w-4" />
-            </Button>
-            <Button
-              variant={mode === 'build' ? 'default' : 'outline'}
-              onClick={() => { setMode('build'); setBuildError(''); }}
-            >
-              ビルダー
-            </Button>
-          </div>
+    <ToolPageLayout icon={Clock} title={`Cron式 ${mode === 'parse' ? '解説' : 'ビルダー'}`}>
+      <div className="flex items-center gap-2">
+        <Button
+          variant={mode === 'parse' ? 'default' : 'outline'}
+          onClick={() => { setMode('parse'); setError(''); }}
+        >
+          解説
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={toggleMode}
+          aria-label="モード切替"
+        >
+          <ArrowLeftRight className="h-4 w-4" />
+        </Button>
+        <Button
+          variant={mode === 'build' ? 'default' : 'outline'}
+          onClick={() => { setMode('build'); setBuildError(''); }}
+        >
+          ビルダー
+        </Button>
+      </div>
 
-          <AnimatePresence mode="wait">
-            {mode === 'parse' ? (
-              <motion.div
-                key="parse"
-                className="space-y-4"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.2 }}
-              >
-                <div className="space-y-2">
-                  <label htmlFor="cron-input" className="text-sm font-medium">Cron式</label>
-                  <Input
-                    id="cron-input"
-                    value={expression}
-                    onChange={(e) => setExpression(e.target.value)}
-                    placeholder="* * * * *"
-                    className="font-mono"
-                  />
-                </div>
+      <AnimatePresence mode="wait">
+        {mode === 'parse' ? (
+          <motion.div
+            key="parse"
+            className="space-y-4"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="space-y-2">
+              <label htmlFor="cron-input" className="text-sm font-medium">Cron式</label>
+              <Input
+                id="cron-input"
+                value={expression}
+                onChange={(e) => setExpression(e.target.value)}
+                placeholder="* * * * *"
+                className="font-mono"
+              />
+            </div>
 
-                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                  <Button type="button" className="w-full" onClick={handleParse}>
-                    解析
-                  </Button>
-                </motion.div>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button type="button" className="w-full" onClick={handleParse}>
+                解析
+              </Button>
+            </motion.div>
 
-                {error && <p className="text-sm text-destructive">{error}</p>}
+            {error && <p className="text-sm text-destructive">{error}</p>}
 
-                <AnimatePresence>
-                  {description && (
-                    <motion.div
-                      className="space-y-4"
-                      initial={{ opacity: 0, y: 16 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <div className="rounded border p-3">
-                        <p className="text-sm font-medium text-muted-foreground">説明</p>
-                        <p className="text-lg">{description}</p>
-                      </div>
-                      {nextDates.length > 0 && (
-                        <div className="rounded border p-3">
-                          <p className="text-sm font-medium text-muted-foreground mb-2">次回実行日時（5件）</p>
-                          <ul className="space-y-1">
-                            {nextDates.map((date, i) => (
-                              <li key={i} className="font-mono text-sm">
-                                {date.toLocaleString('ja-JP')}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </motion.div>
+            <AnimatePresence>
+              {description && (
+                <motion.div
+                  className="space-y-4"
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="rounded border p-3">
+                    <p className="text-sm font-medium text-muted-foreground">説明</p>
+                    <p className="text-lg">{description}</p>
+                  </div>
+                  {nextDates.length > 0 && (
+                    <div className="rounded border p-3">
+                      <p className="text-sm font-medium text-muted-foreground mb-2">次回実行日時（5件）</p>
+                      <ul className="space-y-1">
+                        {nextDates.map((date, i) => (
+                          <li key={i} className="font-mono text-sm">
+                            {date.toLocaleString('ja-JP')}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   )}
-                </AnimatePresence>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="build"
-                className="space-y-4"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.2 }}
-              >
-                <SelectField label="分" options={MINUTE_OPTIONS} value={schedule.minute} customizable onChange={(v) => updateField('minute', v)} />
-                <SelectField label="時" options={HOUR_OPTIONS} value={schedule.hour} customizable onChange={(v) => updateField('hour', v)} />
-                <SelectField label="日" options={DOM_OPTIONS} value={schedule.dayOfMonth} customizable onChange={(v) => updateField('dayOfMonth', v)} />
-                <SelectField label="月" options={MONTH_OPTIONS} value={schedule.month} customizable onChange={(v) => updateField('month', v)} />
-                <SelectField label="曜日" options={DOW_OPTIONS} value={schedule.dayOfWeek} customizable onChange={(v) => updateField('dayOfWeek', v)} />
-
-                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                  <Button type="button" className="w-full" onClick={handleBuild}>
-                    生成
-                  </Button>
                 </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="build"
+            className="space-y-4"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.2 }}
+          >
+            <SelectField label="分" options={MINUTE_OPTIONS} value={schedule.minute} customizable onChange={(v) => updateField('minute', v)} />
+            <SelectField label="時" options={HOUR_OPTIONS} value={schedule.hour} customizable onChange={(v) => updateField('hour', v)} />
+            <SelectField label="日" options={DOM_OPTIONS} value={schedule.dayOfMonth} customizable onChange={(v) => updateField('dayOfMonth', v)} />
+            <SelectField label="月" options={MONTH_OPTIONS} value={schedule.month} customizable onChange={(v) => updateField('month', v)} />
+            <SelectField label="曜日" options={DOW_OPTIONS} value={schedule.dayOfWeek} customizable onChange={(v) => updateField('dayOfWeek', v)} />
 
-                {buildError && <p className="text-sm text-destructive">{buildError}</p>}
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button type="button" className="w-full" onClick={handleBuild}>
+                生成
+              </Button>
+            </motion.div>
 
-                <AnimatePresence>
-                  {buildResult && (
-                    <motion.div
-                      ref={buildResultRef as RefObject<HTMLDivElement>}
-                      className="space-y-4"
-                      initial={{ opacity: 0, y: 16 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <div className="rounded border p-3">
-                        <div className="flex items-center justify-between">
-                          <p className="text-sm font-medium text-muted-foreground">Cron式</p>
-                          <CopyButton copied={copiedKey !== null} onClick={() => copy(buildResult)} />
-                        </div>
-                        <p className="text-lg font-mono">{buildResult}</p>
-                      </div>
-                      {buildDescription && (
-                        <div className="rounded border p-3">
-                          <p className="text-sm font-medium text-muted-foreground">説明</p>
-                          <p className="text-lg">{buildDescription}</p>
-                        </div>
-                      )}
-                      {buildNextDates.length > 0 && (
-                        <div className="rounded border p-3">
-                          <p className="text-sm font-medium text-muted-foreground mb-2">次回実行日時（5件）</p>
-                          <ul className="space-y-1">
-                            {buildNextDates.map((date, i) => (
-                              <li key={i} className="font-mono text-sm">
-                                {date.toLocaleString('ja-JP')}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </motion.div>
+            {buildError && <p className="text-sm text-destructive">{buildError}</p>}
+
+            <AnimatePresence>
+              {buildResult && (
+                <motion.div
+                  ref={buildResultRef as RefObject<HTMLDivElement>}
+                  className="space-y-4"
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="rounded border p-3">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-medium text-muted-foreground">Cron式</p>
+                      <CopyButton copied={copiedKey !== null} onClick={() => copy(buildResult)} />
+                    </div>
+                    <p className="text-lg font-mono">{buildResult}</p>
+                  </div>
+                  {buildDescription && (
+                    <div className="rounded border p-3">
+                      <p className="text-sm font-medium text-muted-foreground">説明</p>
+                      <p className="text-lg">{buildDescription}</p>
+                    </div>
                   )}
-                </AnimatePresence>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </CardContent>
-      </Card>
-    </div>
+                  {buildNextDates.length > 0 && (
+                    <div className="rounded border p-3">
+                      <p className="text-sm font-medium text-muted-foreground mb-2">次回実行日時（5件）</p>
+                      <ul className="space-y-1">
+                        {buildNextDates.map((date, i) => (
+                          <li key={i} className="font-mono text-sm">
+                            {date.toLocaleString('ja-JP')}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </ToolPageLayout>
   );
 };
 

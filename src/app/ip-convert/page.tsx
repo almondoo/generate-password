@@ -2,12 +2,7 @@
 
 import { CopyButton } from '@/components/CopyButton';
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import ToolPageLayout from '@/components/ToolPageLayout';
 import { Input } from '@/components/ui/input';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { Globe } from 'lucide-react';
@@ -40,56 +35,48 @@ const IpConvertPage = () => {
   ] : [];
 
   return (
-    <div className="space-y-6 py-6">
-      <Card>
-        <CardHeader className="text-center">
-          <Globe className="mx-auto h-8 w-8 text-muted-foreground" />
-          <CardTitle className="text-xl">IPアドレス変換</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <label htmlFor="ip-input" className="text-sm font-medium">IPv4アドレス</label>
-            <Input
-              id="ip-input"
-              value={ip}
-              onChange={(e) => setIp(e.target.value)}
-              placeholder="192.168.1.1"
-              className="font-mono"
-            />
-          </div>
+    <ToolPageLayout icon={Globe} title="IPアドレス変換">
+      <div className="space-y-2">
+        <label htmlFor="ip-input" className="text-sm font-medium">IPv4アドレス</label>
+        <Input
+          id="ip-input"
+          value={ip}
+          onChange={(e) => setIp(e.target.value)}
+          placeholder="192.168.1.1"
+          className="font-mono"
+        />
+      </div>
 
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            <Button type="button" className="w-full" onClick={handleConvert}>
-              変換
-            </Button>
+      <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+        <Button type="button" className="w-full" onClick={handleConvert}>
+          変換
+        </Button>
+      </motion.div>
+
+      {error && <p className="text-sm text-destructive">{error}</p>}
+
+      <AnimatePresence>
+        {result && (
+          <motion.div
+            className="space-y-2"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.3 }}
+          >
+            {fields.map(({ label, value, key }) => (
+              <div key={key} className="flex items-center justify-between rounded border p-2 text-sm">
+                <div>
+                  <span className="text-muted-foreground">{label}: </span>
+                  <span className="font-mono font-medium">{value}</span>
+                </div>
+                <CopyButton copied={copiedKey === key} onClick={() => copy(value, key)} />
+              </div>
+            ))}
           </motion.div>
-
-          {error && <p className="text-sm text-destructive">{error}</p>}
-
-          <AnimatePresence>
-            {result && (
-              <motion.div
-                className="space-y-2"
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.3 }}
-              >
-                {fields.map(({ label, value, key }) => (
-                  <div key={key} className="flex items-center justify-between rounded border p-2 text-sm">
-                    <div>
-                      <span className="text-muted-foreground">{label}: </span>
-                      <span className="font-mono font-medium">{value}</span>
-                    </div>
-                    <CopyButton copied={copiedKey === key} onClick={() => copy(value, key)} />
-                  </div>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </CardContent>
-      </Card>
-    </div>
+        )}
+      </AnimatePresence>
+    </ToolPageLayout>
   );
 };
 

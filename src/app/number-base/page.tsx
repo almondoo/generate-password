@@ -1,12 +1,7 @@
 'use client';
 
 import { CopyButton } from '@/components/CopyButton';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import ToolPageLayout from '@/components/ToolPageLayout';
 import { Input } from '@/components/ui/input';
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
 import { Binary } from 'lucide-react';
@@ -46,33 +41,25 @@ const NumberBasePage = () => {
   ] as const;
 
   return (
-    <div className="space-y-6 py-6">
-      <Card>
-        <CardHeader className="text-center">
-          <Binary className="mx-auto h-8 w-8 text-muted-foreground" />
-          <CardTitle className="text-xl">数値基数変換</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {fields.map(({ label, value, setter, base, id }) => (
-            <div key={id} className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label htmlFor={`base-${id}`} className="text-sm font-medium">{label}</label>
-                <CopyButton copied={copiedKey === id} onClick={() => copy(value, id)} />
-              </div>
-              <Input
-                id={`base-${id}`}
-                value={value}
-                onChange={(e) => { setter(e.target.value); update(e.target.value, base); }}
-                placeholder={`${label}を入力...`}
-                className="font-mono"
-              />
-            </div>
-          ))}
+    <ToolPageLayout icon={Binary} title="数値基数変換">
+      {fields.map(({ label, value, setter, base, id }) => (
+        <div key={id} className="space-y-2">
+          <div className="flex items-center justify-between">
+            <label htmlFor={`base-${id}`} className="text-sm font-medium">{label}</label>
+            <CopyButton copied={copiedKey === id} onClick={() => copy(value, id)} />
+          </div>
+          <Input
+            id={`base-${id}`}
+            value={value}
+            onChange={(e) => { setter(e.target.value); update(e.target.value, base); }}
+            placeholder={`${label}を入力...`}
+            className="font-mono"
+          />
+        </div>
+      ))}
 
-          {error && <p className="text-sm text-destructive">{error}</p>}
-        </CardContent>
-      </Card>
-    </div>
+      {error && <p className="text-sm text-destructive">{error}</p>}
+    </ToolPageLayout>
   );
 };
 
