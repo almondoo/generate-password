@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { motion } from 'motion/react';
 import type { ComponentType, ReactNode } from 'react';
 
 interface ToolPageLayoutProps {
@@ -23,7 +24,12 @@ const ToolPageLayout = ({
   contentClassName = 'space-y-4',
   afterCard,
 }: ToolPageLayoutProps) => (
-  <div className="space-y-6 py-6">
+  <motion.div
+    className="space-y-6 py-6"
+    initial={{ opacity: 0, x: -20 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ duration: 0.4 }}
+  >
     <Card>
       <CardHeader className="text-center">
         <Icon className="mx-auto h-8 w-8 text-muted-foreground" />
@@ -34,7 +40,7 @@ const ToolPageLayout = ({
       </CardContent>
     </Card>
     {afterCard}
-  </div>
+  </motion.div>
 );
 
 export default ToolPageLayout;
