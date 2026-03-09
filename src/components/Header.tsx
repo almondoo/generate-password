@@ -1,12 +1,23 @@
+'use client';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Menu, Wrench } from 'lucide-react';
 import Link from 'next/link';
+import { motion } from 'motion/react';
+import { useState } from 'react';
 
 const navCategories = [
   {
@@ -39,10 +50,7 @@ const navCategories = [
     items: [
       { label: 'JSON整形', href: '/json' },
       { label: 'Unix時間変換', href: '/unix-time' },
-      { label: 'YAML ↔ JSON', href: '/yaml-json' },
-      { label: 'CSV ↔ JSON', href: '/csv-json' },
-      { label: 'TOML ↔ JSON', href: '/toml-json' },
-      { label: 'XML ↔ JSON', href: '/xml-json' },
+      { label: 'JSON 変換', href: '/json-convert' },
       { label: 'SQL整形', href: '/sql-format' },
       { label: 'XML整形', href: '/xml-format' },
       { label: '数値基数変換', href: '/number-base' },
@@ -90,34 +98,97 @@ const navCategories = [
 ];
 
 const Header = () => {
+  const [sheetOpen, setSheetOpen] = useState(false);
+
   return (
-    <header className="space-y-2">
-      <Link href="/" className="text-lg font-semibold">
-        Generator Tools
-      </Link>
-      <nav aria-label="メインナビゲーション" className="flex items-center gap-1">
-        {navCategories.map((category) => (
-          <DropdownMenu key={category.label} modal={false}>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="group">
-                {category.label}
-                <ChevronDown
-                  aria-hidden="true"
-                  className="ml-1 h-3 w-3 transition-transform duration-200 group-data-[state=open]:rotate-180"
-                />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              {category.items.map((item) => (
-                <DropdownMenuItem key={item.label} asChild>
-                  <Link href={item.href}>{item.label}</Link>
-                </DropdownMenuItem>
+    <motion.header
+      className="space-y-3"
+      initial={{ opacity: 0, y: -12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: 'easeOut' }}
+    >
+      <div className="flex items-center justify-between">
+        <Link href="/" className="group flex items-center gap-2.5 text-2xl font-bold tracking-tight">
+          <Wrench className="h-6 w-6 text-primary transition-transform duration-200 group-hover:rotate-[-20deg]" />
+          Generator Tools
+        </Link>
+
+        {/* モバイル: ハンバーガーメニュー */}
+        <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+          <SheetTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              aria-label="メニューを開く"
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="overflow-y-auto">
+            <SheetHeader>
+              <SheetTitle>メニュー</SheetTitle>
+            </SheetHeader>
+            <nav aria-label="メインナビゲーション" className="px-4 pb-4">
+              {navCategories.map((category) => (
+                <div key={category.label} className="mb-4">
+                  <p className="mb-1 text-xs font-medium text-muted-foreground">
+                    {category.label}
+                  </p>
+                  <ul className="space-y-0.5">
+                    {category.items.map((item) => (
+                      <li key={item.label}>
+                        <Link
+                          href={item.href}
+                          onClick={() => setSheetOpen(false)}
+                          className="block rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-accent"
+                        >
+                          {item.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </nav>
+          </SheetContent>
+        </Sheet>
+      </div>
+
+      {/* デスクトップ: ドロップダウンナビゲーション */}
+      <nav
+        aria-label="メインナビゲーション"
+        className="hidden flex-wrap items-center gap-1 md:flex"
+      >
+        {navCategories.map((category, i) => (
+          <motion.div
+            key={category.label}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.05 * i }}
+          >
+            <DropdownMenu modal={false}>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="group">
+                  {category.label}
+                  <ChevronDown
+                    aria-hidden="true"
+                    className="ml-1 h-3 w-3 transition-transform duration-200 group-data-[state=open]:rotate-180"
+                  />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                {category.items.map((item) => (
+                  <DropdownMenuItem key={item.label} asChild>
+                    <Link href={item.href}>{item.label}</Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </motion.div>
         ))}
       </nav>
-    </header>
+    </motion.header>
   );
 };
 
